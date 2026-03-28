@@ -17,8 +17,8 @@ const orderForm = document.getElementById('orderForm');
 const nameInput = document.getElementById('customerName');
 const phoneInput = document.getElementById('customerPhone');
 const commentInput = document.getElementById('comment');
-const orderSuccess = document.getElementById('orderSuccess');
-const orderId = document.getElementById('orderId');
+const orderSuccessBlock = document.getElementById('orderSuccess');
+const orderIdValue = document.getElementById('orderId');
 
 // Элементы карточек размеров
 const sizes = document.querySelectorAll('.main-size-card');
@@ -185,9 +185,9 @@ submitButton.addEventListener('click', async () => {
         createdAt: new Date().toISOString()
     };
     console.log('Заказ: ' + payload.id, payload);
-    orderId.textContent = payload.id;
+    orderIdValue.textContent = payload.id;
 
     // Переключаем UI на экран успеха.
     orderForm.style.display = 'none';
-    orderSuccess.classList.add('is-visible');
+    orderSuccessBlock.classList.add('is-visible');
 });
