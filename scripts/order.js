@@ -17,8 +17,8 @@ const orderForm = document.getElementById('orderForm');
 const nameInput = document.getElementById('customerName');
 const phoneInput = document.getElementById('customerPhone');
 const commentInput = document.getElementById('comment');
-const orderSuccessBlock = document.getElementById('orderSuccess');
-const orderIdValue = document.getElementById('orderId');
+const orderSuccess = document.getElementById('orderSuccess');
+const orderId = document.getElementById('orderId');
 
 // Элементы карточек размеров
 const sizes = document.querySelectorAll('.main-size-card');
@@ -54,25 +54,21 @@ ymaps.ready(() => {
         group.forEach(element => {
             element.addEventListener('click', () => {
                 group.forEach((c) => c.classList.toggle('is-active', c.dataset.value === element.dataset.value));
-                calculation = null;
-                submitButton.disabled = true;
                 renderInfo();
-            });
+            })
         });
     });
 
-    renderInfo();
+    // Дизейблим кнопку Рассчитать если одного или двух значений нет
+    [fromInput, toInput].forEach((input) => {
+        input.addEventListener('change', () => {
+            calcButton.disabled = !(fromInput.value && toInput.value);
+            renderInfo();
+        });
+    });
+
 });
 
-// Дизейблим кнопку Рассчитать если одного или двух значений нет
-[fromInput, toInput].forEach((input) => {
-    input.addEventListener('change', () => {
-        calcButton.disabled = !(fromInput.value && toInput.value);
-        calculation = null;
-        submitButton.disabled = true;
-        renderInfo();
-    });
-});
 
 // Основной расчет: строим маршрут и считаем стоимость.
 calcButton.addEventListener('click', () => {
@@ -142,16 +138,16 @@ calcButton.addEventListener('click', () => {
     mapRoute.model.events.add('requestfail', failedCalculation);
 });
 
-// Вывод значений просчета в форму
+// Dывод значений просчета в форму
 function renderInfo(info = null) {
     // Заполняем значения в UI (или сбрасываем на "—").
-    distanceValue.textContent = info ? info.distanceText : '—';
-    durationValue.textContent = info ? info.durationText : '—';
-    rateValue.textContent = info ? info.rateText : '—';
-    totalValue.textContent = info ? info.totalText : '—';
+    distanceValue.textContent = info ? info['distanceText'] : '—';
+    durationValue.textContent = info ? info['durationText'] : '—';
+    rateValue.textContent = info ? info['rateText'] : '—';
+    totalValue.textContent = info ? info['totalText'] : '—';
 }
 
-// Вывод ошибки и сброс подсчетов в случае возникновения ошибки
+// Dывод ошибки и сброс подсчетов в случае возникновения ошибки
 function failedCalculation() {
     calculation = null;
     renderInfo();
@@ -188,13 +184,10 @@ submitButton.addEventListener('click', async () => {
         customer: {name, phone, comment},
         createdAt: new Date().toISOString()
     };
-    console.log({
-        ...payload,
-        ...calculation
-    });
-    orderIdValue.textContent = payload.id;
+    console.log('Заказ: ' + payload.id, payload);
+    orderId.textContent = payload.id;
 
     // Переключаем UI на экран успеха.
     orderForm.style.display = 'none';
-    orderSuccessBlock.classList.add('is-visible');
+    orderSuccess.classList.add('is-visible');
 });
