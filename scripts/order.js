@@ -185,9 +185,9 @@ submitButton.addEventListener('click', async () => {
         createdAt: new Date().toISOString()
     };
     console.log('Заказ: ' + payload.id, payload);
-    orderIdValue.textContent = payload.id;
+    orderId.textContent = payload.id;
 
     // Переключаем UI на экран успеха.
     orderForm.style.display = 'none';
-    orderSuccessBlock.classList.add('is-visible');
+    orderSuccess.classList.add('is-visible');
 });
